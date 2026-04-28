@@ -1,0 +1,8 @@
+{
+  "name": "SmartFridge AI 智能冰箱廚師",
+  "description": "透過鏡頭偵測冰箱食材，並提供專屬料理推薦與食譜。",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": []
+}
