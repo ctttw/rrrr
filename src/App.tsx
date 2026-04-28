@@ -5,8 +5,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { CameraCapture } from './components/CameraCapture';
-import { getRecipeRecommendations, Recipe, detectIngredients } from './services/geminiService';
-import { detectIngredientsLocal, LocalIngredient, BoundingBox } from './services/localVisionService';
+import type { Recipe } from './services/geminiService';
+import type { LocalIngredient, BoundingBox } from './services/localVisionService';
 import { ChefHat, Refrigerator, ArrowRight, Clock, Info, CheckCircle2, ShoppingBasket, X, Cloud, Cpu, BookmarkPlus, Bookmark, BookHeart, Plus, Trash2, Wand2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -64,6 +64,7 @@ export default function App() {
     setAnalyzeStatus(aiMode === 'local' ? '加載本地偵測模型中...' : '雲端 AI 視覺掃描中...');
     try {
       if (aiMode === 'local') {
+        const { detectIngredientsLocal } = await import('./services/localVisionService');
         const result = await detectIngredientsLocal(base64Image, (status) => {
           setAnalyzeStatus(status);
         });
@@ -71,6 +72,7 @@ export default function App() {
         setDetections(result.detections);
         setImageSize(result.imageSize);
       } else {
+        const { detectIngredients } = await import('./services/geminiService');
         const detected = await detectIngredients(base64Image);
         setIngredients(detected);
         setDetections([]);
@@ -93,6 +95,7 @@ export default function App() {
     
     setIsGeneratingRecipes(true);
     try {
+      const { getRecipeRecommendations } = await import('./services/geminiService');
       const recommendations = await getRecipeRecommendations(ingredientNames);
       setRecipes(recommendations);
     } catch (error: any) {
